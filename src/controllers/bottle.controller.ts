@@ -2,7 +2,6 @@ import {
   Count,
   CountSchema,
   Filter,
-  FilterExcludingWhere,
   repository,
   Where,
 } from '@loopback/repository';
@@ -13,7 +12,6 @@ import {
   param,
   patch,
   post,
-  put,
   requestBody,
   response,
 } from '@loopback/rest';
@@ -43,8 +41,13 @@ export class BottleController {
       },
     })
     bottle: Omit<Bottle, 'id'>,
-  ): Promise<Bottle> {
-    return this.bottleRepository.create(bottle);
+  ) {
+    const reponse = await this.bottleRepository.execute(
+      'INSERT INTO public.bottle (brand, price) VALUES ($1, $2)',
+      [bottle.brand, bottle.price],
+    );
+    console.log(reponse);
+    return reponse;
   }
 
   @get('/bottles/count')
@@ -68,8 +71,12 @@ export class BottleController {
       },
     },
   })
-  async find(@param.filter(Bottle) filter?: Filter<Bottle>): Promise<Bottle[]> {
-    return this.bottleRepository.find(filter);
+  async find(@param.filter(Bottle) filter?: Filter<Bottle>) {
+    const reponse = await this.bottleRepository.execute(
+      'SELECT * from public.bottle',
+    );
+    console.log(reponse);
+    return reponse;
   }
 
   @patch('/bottles')
@@ -100,12 +107,13 @@ export class BottleController {
       },
     },
   })
-  async findById(
-    @param.path.number('id') id: number,
-    @param.filter(Bottle, {exclude: 'where'})
-    filter?: FilterExcludingWhere<Bottle>,
-  ): Promise<Bottle> {
-    return this.bottleRepository.findById(id, filter);
+  async findById(@param.path.number('id') id: number) {
+    const reponse = await this.bottleRepository.execute(
+      'SELECT * from public.bottle where id = $1',
+      [id],
+    );
+    console.log(reponse);
+    return reponse;
   }
 
   @patch('/bottles/{id}')
@@ -117,31 +125,30 @@ export class BottleController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Bottle, {partial: true}),
+          schema: getModelSchemaRef(Bottle),
         },
       },
     })
     bottle: Bottle,
-  ): Promise<void> {
-    await this.bottleRepository.updateById(id, bottle);
-  }
-
-  @put('/bottles/{id}')
-  @response(204, {
-    description: 'Bottle PUT success',
-  })
-  async replaceById(
-    @param.path.number('id') id: number,
-    @requestBody() bottle: Bottle,
-  ): Promise<void> {
-    await this.bottleRepository.replaceById(id, bottle);
+  ) {
+    const reponse = await this.bottleRepository.execute(
+      'UPDATE public.bottle SET brand = $1, price = $2 WHERE id = $3',
+      [bottle.brand, bottle.price, id],
+    );
+    console.log(reponse);
+    return reponse;
   }
 
   @del('/bottles/{id}')
   @response(204, {
     description: 'Bottle DELETE success',
   })
-  async deleteById(@param.path.number('id') id: number): Promise<void> {
-    await this.bottleRepository.deleteById(id);
+  async deleteById(@param.path.number('id') id: number) {
+    const reponse = await this.bottleRepository.execute(
+      'DELETE FROM public.bottle WHERE id = $1',
+      [id],
+    );
+    console.log(reponse);
+    return reponse;
   }
 }
