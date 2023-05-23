@@ -1,75 +1,37 @@
 # loopback4-custom-query
 
-This application is generated using [LoopBack 4 CLI](https://loopback.io/doc/en/lb4/Command-line-interface.html) with the
-[initial project layout](https://loopback.io/doc/en/lb4/Loopback-application-layout.html).
+Test App to get the response types of the execute function of the `DefaultCrudRepository`.
 
-## Install dependencies
+## Select Query
 
-By default, dependencies were installed when this application was generated.
-Whenever dependencies in `package.json` are changed, run the following command:
+### Example 1
 
-```sh
-npm install
+```ts
+this.bottleRepository.execute('SELECT * from public.bottle');
 ```
 
-To only install resolved dependencies in `package-lock.json`:
+Returned Plain Array
 
-```sh
-npm ci
+```json
+[
+  {"id": 1, "brand": "Bisleri General", "price": 20},
+  {"id": 2, "brand": "Bisleri Vedica", "price": 60},
+  {"id": 3, "brand": "AquaFina", "price": 120}
+]
 ```
 
-## Run the application
+### Example 2
 
-```sh
-npm start
+```ts
+this.bottleRepository.execute('SELECT * from public.bottle');
 ```
 
-You can also run `node .` to skip the build step.
+Returned Plain Array
 
-Open http://127.0.0.1:3000 in your browser.
-
-## Rebuild the project
-
-To incrementally build the project:
-
-```sh
-npm run build
+```json
+[
+  {"id": 1, "brand": "Bisleri General", "price": 20},
+  {"id": 2, "brand": "Bisleri Vedica", "price": 60},
+  {"id": 3, "brand": "AquaFina", "price": 120}
+]
 ```
-
-To force a full build by cleaning up cached artifacts:
-
-```sh
-npm run rebuild
-```
-
-## Fix code style and formatting issues
-
-```sh
-npm run lint
-```
-
-To automatically fix such issues:
-
-```sh
-npm run lint:fix
-```
-
-## Other useful commands
-
-- `npm run migrate`: Migrate database schemas for models
-- `npm run openapi-spec`: Generate OpenAPI spec into a file
-- `npm run docker:build`: Build a Docker image for this application
-- `npm run docker:run`: Run this application inside a Docker container
-
-## Tests
-
-```sh
-npm test
-```
-
-## What's next
-
-Please check out [LoopBack 4 documentation](https://loopback.io/doc/en/lb4/) to
-understand how you can continue to add features to this application.
-
-[![LoopBack](https://github.com/loopbackio/loopback-next/raw/master/docs/site/imgs/branding/Powered-by-LoopBack-Badge-(blue)-@2x.png)](http://loopback.io/)
